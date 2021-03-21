@@ -18,6 +18,7 @@ public:
     inline void setAttrName(QString value){m_attrName = value;}
 
 private:
+    MyParser(){}
     // 解析器
     HTML::ParserDom m_parser;
     tree<HTML::Node> m_dom;

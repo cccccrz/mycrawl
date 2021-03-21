@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QThread>
+#include <QNetworkAccessManager>
 
 class MyThread : public QObject
 {
@@ -17,6 +18,8 @@ public slots:
     //需要在线程中执行的槽函数
     void slot_StartMyThread(QString rootURL, QString machURL,
                             QString tagName, QString attrName);
+private:
+    QNetworkAccessManager* m_manager;
 };
 
 #endif // MYTHREAD_H

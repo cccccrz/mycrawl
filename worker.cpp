@@ -9,7 +9,7 @@ Worker::Worker(QObject *parent) : QObject(parent)
     m_myThread->moveToThread(subthread);
 
     // 注册工作信号
-    connect(this, SIGNAL(sig_startThread()), m_myThread, SLOT(slot_StartMyThread()));
+    connect(this, &Worker::sig_startThread, m_myThread, &MyThread::slot_StartMyThread);
     //connect(m_myThread, SIGNAL(Threadfinish()), this, SLOT(slot_finishThread()));
     //自动回收
     connect(subthread, &QThread::finished, m_myThread, &QObject::deleteLater);

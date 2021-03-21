@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>503</height>
+    <width>600</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>网络爬虫工具</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
@@ -44,7 +44,7 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0" colspan="2">
      <widget class="QWidget" name="widget_3" native="true">
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="1">
@@ -88,7 +88,7 @@
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="2" column="0" colspan="2">
      <widget class="QWidget" name="widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -108,31 +108,25 @@
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="3" column="0" colspan="2">
      <widget class="QTextEdit" name="out_Text"/>
     </item>
-    <item>
+    <item row="4" column="0">
      <widget class="QPushButton" name="work_Btn">
       <property name="text">
-       <string>work</string>
+       <string>爬取下载链接</string>
       </property>
      </widget>
     </item>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="show_Btn">
+      <property name="text">
+       <string>显示结果</string>
       </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>5</width>
-        <height>10</height>
-       </size>
-      </property>
-     </spacer>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="QListWidget" name="listWidget"/>
     </item>
    </layout>
   </widget>

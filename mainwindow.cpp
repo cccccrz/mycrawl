@@ -5,6 +5,7 @@
 #include <QSslSocket>
 #include <QVariant>
 #include "html/ParserDom.h"
+#include "table.hpp"
 
 
 
@@ -172,9 +173,22 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_work_Btn_clicked()
 {
-    QString rootUrl = "http://www.yhdm.io/";
-    QString machUrl = "magent";
+    QString rootUrl = "https://yingtt.com";
+    QString machUrl = "/vodplay/";
     // 创建线程工作
     m_worker = new Worker;
     m_worker->start_thread(rootUrl,machUrl);
+}
+
+void MainWindow::on_show_Btn_clicked()
+{
+    for(int i=0; i<10; i++)
+    {
+        if (MyTable::GetInstance()->GetResultTable().isEmpty())
+        {
+            continue;
+        }
+        QString resUrl = MyTable::GetInstance()->PopResultTable();
+        ui->listWidget->addItem(resUrl);
+    }
 }
