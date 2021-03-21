@@ -27,7 +27,8 @@ void MyParser::parse(QString rootUrl, QString machURL)
                 // 匹配结果URL,加入队列
                 if (m_resURL.toStdString().compare(0, (size_t)machURL.length(), machURL.toStdString()) == 0)
                 {
-                    MyTable::GetInstance()->PushResultTable(m_resURL);
+                    QString resurl = rootUrl + m_resURL;
+                    MyTable::GetInstance()->PushResultTable(resurl);
                 }
                 // 匹配有效工作URL
                 if (m_resURL.toStdString().compare(0, 1, "/") == 0)
@@ -36,6 +37,8 @@ void MyParser::parse(QString rootUrl, QString machURL)
                 }
                 // 去除根URL
                 if (m_resURL.compare(rootUrl + '/') == 0)
+                    continue;
+                if(m_resURL.toStdString().compare(0,4,"http")!=0) // 过滤非http/https协议
                     continue;
                 MyTable::GetInstance()->PushTodoTable(m_resURL);
                 //qDebug()<<"[TODO]:"<<m_resURL;

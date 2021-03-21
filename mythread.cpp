@@ -26,11 +26,6 @@ void MyThread::slot_StartMyThread(QString rootURL, QString machURL,
     // 开始任务
     while (1)
     {
-        if(MyTable::GetInstance()->GetTodoTable().isEmpty())
-        {
-            qDebug()<<"work over"<<endl;
-            break;
-        }
         // 从队列取任务
         QString todo_url;
         bool isRepeat = false;
@@ -38,18 +33,29 @@ void MyThread::slot_StartMyThread(QString rootURL, QString machURL,
         // URL去重
         do
         {
+            if(MyTable::GetInstance()->TodoTableIsEmpty())
+            {
+                //qDebug()<<"work over"<<endl;
+                return; // 任务完成
+            }
             todo_url = MyTable::GetInstance()->PopTodoTable();
 
+            // URL 去重
             for(auto i : MyTable::GetInstance()->GetVisitedTable())
             {
-                // 如果重复，取下一个任务
+                // 如果重复，跳出取下一个
                 if(todo_url.compare(i)==0)
                 {
                     isRepeat = true;
                     break;
                 }
             }
-        }while(isRepeat);
+            if(isRepeat)
+            {
+                isRepeat = false;
+                continue;
+            }
+        }while(isRepeat);// 爬取不重复url
 
         MyTable::GetInstance()->PushVisitedTable(todo_url);
 

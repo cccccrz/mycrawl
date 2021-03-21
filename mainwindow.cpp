@@ -184,7 +184,7 @@ void MainWindow::on_show_Btn_clicked()
 {
     for(int i=0; i<10; i++)
     {
-        if (MyTable::GetInstance()->GetResultTable().isEmpty())
+        if (MyTable::GetInstance()->ResultTableIsEmpty())
         {
             continue;
         }

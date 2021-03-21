@@ -31,7 +31,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, QString tagName, QString attrN
     qDebug()<<"crawl "<<m_rootURL<<"......";
     //connect(m_reply,&QNetworkReply::finished,this,&Mycrawl::reply_Finished);
 
-    // 事件循环，同步爬取
+    // 事件循环，同步爬取g
     QEventLoop loop;
     connect(m_reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec(QEventLoop::ExcludeUserInputEvents);
@@ -39,13 +39,13 @@ void Mycrawl::get(QNetworkAccessManager* manager, QString tagName, QString attrN
     QByteArray replyData = m_reply->readAll();
     int statusCode = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     QVariant redirectAttr = m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-    if (m_reply->error()
+        if (m_reply->error()
         || 300 == statusCode //状态码300 Multiple Choices，既不是错误也不算重定向，应该是qt bug
         || !redirectAttr.isNull())
     {
-        QString errString = m_reply->error() ? m_reply->errorString() : QString("发生重定向(%1)，不允许此情况").arg(statusCode);
-        QMessageBox::critical(nullptr, "网络异常",
-                              QString("发送get请求时出现错误：\n网址：%1\n错误信息：%2").arg(m_reply->request().url().toDisplayString(), errString));
+//        QString errString = m_reply->error() ? m_reply->errorString() : QString("发生重定向(%1)，不允许此情况").arg(statusCode);
+//        QMessageBox::critical(nullptr, "网络异常",
+//                              QString("发送get请求时出现错误：\n网址：%1\n错误信息：%2").arg(m_reply->request().url().toDisplayString(), errString));
         replyData.clear();
         m_reply->deleteLater();
         m_reply = nullptr;
