@@ -49,8 +49,9 @@ private slots:
     // 接受完毕回调
     void reply_Finished();
 
-    void on_pushButton_clicked();
+
     void on_work_Btn_clicked();
     void on_show_Btn_clicked();
+    void on_btn_search_clicked();
 };
 #endif // MAINWINDOW_H
