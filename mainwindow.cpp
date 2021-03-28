@@ -13,6 +13,7 @@ using namespace std;
 #define BINGCN "https://cn.bing.com/search?q="
 #define BINGFR "&ensearch=1"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)

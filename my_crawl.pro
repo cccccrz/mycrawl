@@ -27,6 +27,7 @@ INCLUDEPATH += \
 #LIBS += -L$$PWD/lib -lhtmlcxx
 
 SOURCES += \
+    dianyinttparser.cpp \
     main.cpp \
     mainwindow.cpp \
     html/utils.cc \
@@ -36,11 +37,12 @@ SOURCES += \
     html/Node.cc \
     html/Extensions.cc \
     mycrawl.cpp \
-    myparser.cpp \
     mythread.cpp \
+    parser.cpp \
     worker.cpp
 
 HEADERS += \
+    dianyinttparser.h \
     mainwindow.h \
     html/utils.h \
     html/Uri.h \
@@ -54,8 +56,8 @@ HEADERS += \
     html/wincstring.h \
     html/tld.h \
     mycrawl.h \
-    myparser.h \
     mythread.h \
+    parser.h \
     table.hpp \
     worker.h
 

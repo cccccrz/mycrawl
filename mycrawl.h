@@ -8,7 +8,15 @@
 #include <QEventLoop>
 #include <QQueue>
 
-#include"myparser.h"
+#include"parser.h"
+
+enum WEB_TYPE
+{
+    TYPE_DIANYINTT = 1,
+    TYPE_BAIDU = 2,
+};
+
+Parser* TTY_CreatParser(uint nWebType, QString html);
 
 class Mycrawl:public QObject
 {
@@ -25,7 +33,7 @@ private slots:
     //void reply_Finished();
 
 private:
-    MyParser* m_parser;
+    Parser* m_parser;
     QString m_rootURL;
     QString m_machURL;
     QString m_tagName;

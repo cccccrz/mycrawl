@@ -12,8 +12,7 @@ MyThread::~MyThread()
     delete m_manager;
 }
 
-void MyThread::slot_StartMyThread(QString rootURL, QString machURL,
-                                  QString tagName, QString attrName)
+void MyThread::slot_StartMyThread(uint nWebType)
 {
     //打印线程ID
     qDebug() << "kid " << "threadID : " << QThread::currentThread();
@@ -62,7 +61,7 @@ void MyThread::slot_StartMyThread(QString rootURL, QString machURL,
         //URL未使用，爬虫工作
         Mycrawl todo_crawl(todo_url);
         todo_crawl.setMachUrl(machURL);
-        todo_crawl.get(m_manager, tagName, attrName);
+        todo_crawl.get(m_manager, nWebType);
     }
 
 

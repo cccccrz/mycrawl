@@ -2,6 +2,44 @@
 #include <QDebug>
 #include <QMessageBox>
 
+// 订阅网站
+#define DIANYINTT
+
+#ifdef DIANYINTT
+extern Parser* DIANYINTT_CreateParser(QString html);
+#endif
+
+#ifdef BAIDU
+
+#endif
+
+Parser* TTY_CreatParser(uint nWebType, QString html)
+{
+    Parser* pParser = NULL;
+
+    switch(nWebType)
+    {
+#ifdef BAIDU
+    case TYPE_BAIDU :
+    {
+        //pParser = BAIDU_CreateParser(html);	// 多态
+    }
+    break;
+#endif
+
+#ifdef DIANYINTT
+    case TYPE_DIANYINTT :
+    {
+        pParser = DIANYINTT_CreateParser(html);
+    }
+    break;
+#endif
+    default:
+        break;
+    }
+    return pParser;
+}
+
 Mycrawl::Mycrawl(QString rootUrl):m_rootURL(rootUrl)
 {    
 }
@@ -10,7 +48,7 @@ Mycrawl::~Mycrawl()
 {
 }
 
-void Mycrawl::get(QNetworkAccessManager* manager, QString tagName, QString attrName)
+void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
 {
 //    QSslConfiguration cfg = m_request.sslConfiguration();
 //    cfg.setPeerVerifyMode(QSslSocket::VerifyNone);
@@ -52,11 +90,10 @@ void Mycrawl::get(QNetworkAccessManager* manager, QString tagName, QString attrN
         return;
     }
     qDebug()<<"done!"<<endl;
+
     //解析
-    m_parser = new MyParser(replyData);
-    m_parser->setTagName(m_tagName);
-    m_parser->setAttrName(m_attrName);
-    m_parser->parse(m_rootURL, m_machURL);
+    m_parser = TTY_CreatParser(nWebType, replyData);
+    m_parser->Parse();
 
     //释放资源
     if(m_parser!=nullptr)
