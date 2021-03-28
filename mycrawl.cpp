@@ -1,44 +1,7 @@
-#include "mycrawl.h"
+﻿#include "mycrawl.h"
 #include <QDebug>
 #include <QMessageBox>
-
-// 订阅网站
-#define DIANYINTT
-
-#ifdef DIANYINTT
-extern Parser* DIANYINTT_CreateParser(QString html);
-#endif
-
-#ifdef BAIDU
-
-#endif
-
-Parser* TTY_CreatParser(uint nWebType, QString html)
-{
-    Parser* pParser = NULL;
-
-    switch(nWebType)
-    {
-#ifdef BAIDU
-    case TYPE_BAIDU :
-    {
-        //pParser = BAIDU_CreateParser(html);	// 多态
-    }
-    break;
-#endif
-
-#ifdef DIANYINTT
-    case TYPE_DIANYINTT :
-    {
-        pParser = DIANYINTT_CreateParser(html);
-    }
-    break;
-#endif
-    default:
-        break;
-    }
-    return pParser;
-}
+#include "interface.h"
 
 Mycrawl::Mycrawl(QString rootUrl):m_rootURL(rootUrl)
 {    
@@ -55,16 +18,15 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
 //    cfg.setProtocol(QSsl::TlsV1SslV3);
 //    m_request.setSslConfiguration(cfg);
 
+    m_request.setUrl(QUrl(m_rootURL));
+
     QVariant user_Agent_chrome = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                                  AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36";
-    m_request.setUrl(QUrl(m_rootURL));
     m_request.setHeader(QNetworkRequest::UserAgentHeader,user_Agent_chrome);
+    m_request.setRawHeader("Accept-Language", "zh-CN,zh");
 
     // 发送 get 请求
     m_reply = manager->get(m_request);
-
-    m_tagName = tagName;
-    m_attrName = attrName;
 
     qDebug()<<"crawl "<<m_rootURL<<"......";
     //connect(m_reply,&QNetworkReply::finished,this,&Mycrawl::reply_Finished);
@@ -91,7 +53,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
     }
     qDebug()<<"done!"<<endl;
 
-    //解析
+    //创建对应网站的解析器，解析
     m_parser = TTY_CreatParser(nWebType, replyData);
     m_parser->Parse();
 
@@ -103,7 +65,6 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
     }
     m_reply->deleteLater();
     m_reply = nullptr;
-
 }
 
 // 爬取&解析

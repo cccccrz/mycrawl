@@ -1,4 +1,4 @@
-#ifndef TABLE_H
+﻿#ifndef TABLE_H
 #define TABLE_H
 
 #include <QString>
@@ -27,7 +27,7 @@ public:
     inline QQueue<QString> GetResultTable(){return m_result_Table;}
 
     inline void PushVisitedTable(QString value){m_visited_Table.append(value);}
-    inline QString PopVisitedTable(QList<QString>::iterator pos){m_visited_Table.erase(pos);}
+    inline void PopVisitedTable(QList<QString>::iterator pos){m_visited_Table.erase(pos);}
     inline QList<QString>& GetVisitedTable(){return m_visited_Table;}
 
 private:

@@ -1,4 +1,4 @@
-#ifndef WORKER_H
+﻿#ifndef WORKER_H
 #define WORKER_H
 
 #include <QObject>
@@ -13,12 +13,11 @@ public:
 
 public:
     //开启线程函数
-    void start_thread(QString rootURL, QString machURL,
-                      QString tagName="a", QString attrName="href");
+    void start_thread(QString rootURL,uint nWebType);
 signals:
     //通知子线程的信号
-    void sig_startThread(QString rootURL, QString machURL,
-                         QString tagName, QString attrName);
+    void sig_startThread(QString rootURL,uint nWebType);
+
 private:
     MyThread* m_myThread; //线程指针
     QThread* subthread;

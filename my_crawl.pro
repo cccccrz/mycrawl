@@ -21,13 +21,12 @@ DESTDIR += $$PWD/bin
 
 TARGET = QtCrawl
 
-INCLUDEPATH += \
-    quote(C:/OpenSSL-Win32/include)
+INCLUDEPATH += $$PWD/include
+DEPENDPATH += $$PWD/include
 
 #LIBS += -L$$PWD/lib -lhtmlcxx
 
 SOURCES += \
-    dianyinttparser.cpp \
     main.cpp \
     mainwindow.cpp \
     html/utils.cc \
@@ -39,10 +38,12 @@ SOURCES += \
     mycrawl.cpp \
     mythread.cpp \
     parser.cpp \
-    worker.cpp
+    worker.cpp \
+    interface.cpp \
+    parserdianyintt.cpp \
+    parseryinhua.cpp
 
 HEADERS += \
-    dianyinttparser.h \
     mainwindow.h \
     html/utils.h \
     html/Uri.h \
@@ -59,7 +60,10 @@ HEADERS += \
     mythread.h \
     parser.h \
     table.hpp \
-    worker.h
+    worker.h \
+    interface.h \
+    parserdianyintt.h \
+    parseryinhua.h
 
 FORMS += \
     mainwindow.ui

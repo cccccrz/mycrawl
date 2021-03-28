@@ -1,4 +1,4 @@
-#ifndef PARSER_H
+﻿#ifndef PARSER_H
 #define PARSER_H
 #include <QQueue>
 #include <QString>
@@ -9,9 +9,9 @@ using namespace htmlcxx;
 class Parser
 {
 public:
-    Parser(){}
-    virtual void Parse(){}
-    virtual ~Parser(){}
+    Parser();
+    virtual void Parse()=0;
+    virtual ~Parser();
 
 protected:
 

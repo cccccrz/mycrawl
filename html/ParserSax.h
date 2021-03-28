@@ -1,4 +1,4 @@
-#ifndef __HTML_PARSER_SAX_H__
+﻿#ifndef __HTML_PARSER_SAX_H__
 #define __HTML_PARSER_SAX_H__
 
 #include <string>
@@ -12,7 +12,7 @@ namespace htmlcxx
 		class ParserSax
 		{
 			public:
-				ParserSax() : mpLiteral(0), mCdata(false) {}
+                ParserSax() : mpLiteral(nullptr), mCdata(false) {}
 				virtual ~ParserSax() {}
 
 				/** Parse the html code */
@@ -26,11 +26,11 @@ namespace htmlcxx
 				// the parsing
 				virtual void beginParsing() {}
 
-				virtual void foundTag(Node node, bool isEnd) {}
-				virtual void foundText(Node node) {}
-				virtual void foundComment(Node node) {}
+                virtual void foundTag(Node node, bool isEnd);
+                virtual void foundText(Node node);
+                virtual void foundComment(Node node);
 
-				virtual void endParsing() {}
+                virtual void endParsing();
 
 
 				template <typename _Iterator>

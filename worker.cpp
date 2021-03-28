@@ -1,4 +1,4 @@
-#include "worker.h"
+﻿#include "worker.h"
 #include <QDebug>
 
 Worker::Worker(QObject *parent) : QObject(parent)
@@ -15,12 +15,11 @@ Worker::Worker(QObject *parent) : QObject(parent)
     connect(subthread, &QThread::finished, m_myThread, &QObject::deleteLater);
 }
 
-void Worker::start_thread(QString rootURL, QString machURL,
-                          QString tagName, QString attrName)
+void Worker::start_thread(QString rootURL, uint nWebType)
 {
     qDebug() << "main threadID : " << QThread::currentThread();
     subthread->start(); //开启线程
-    emit sig_startThread(rootURL, machURL, tagName, attrName); //通过信号通知子线程任务
+    emit sig_startThread(rootURL, nWebType); //通过信号通知子线程任务
 }
 
 //void Worker::slot_finishThread()

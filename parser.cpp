@@ -1,1 +1,11 @@
-#include "parser.h"
+﻿#include "parser.h"
+
+Parser::Parser()
+{
+
+}
+
+Parser::~Parser()
+{
+
+}

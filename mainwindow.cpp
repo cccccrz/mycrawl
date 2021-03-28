@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QSslConfiguration>
@@ -6,6 +6,8 @@
 #include <QVariant>
 #include "html/ParserDom.h"
 #include "table.hpp"
+#include "interface.h"
+#include <QMutexLocker>
 
 using namespace std;
 
@@ -23,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->progressBar->hide();
     // 初始化
     m_manager = new QNetworkAccessManager(this);
+
+
 
     //m_URL = "http://www.yhdm.io/";
 
@@ -74,6 +78,8 @@ void MainWindow::on_btn_StartSearch_clicked()
 //    cookie_var.setValue(cookie);
     m_request.setHeader(QNetworkRequest::UserAgentHeader,user_Agent_chrome);
 //    m_request.setHeader(QNetworkRequest::CookieHeader,cookie_var);
+    m_request.setRawHeader("Accept-Language", "zh-CN");
+
     // 发送 get 请求
     m_reply = m_manager->get(m_request);
 
@@ -109,7 +115,7 @@ void MainWindow::reply_ReadyRead()
 
 void MainWindow::processBar_update(qint64 bytesRead, qint64 totalBytes)
 {
-//    qDebug()<<"当前进度："<<bytesRead<<",sum:"<<totalBytes;
+    qDebug()<<"当前进度："<<bytesRead<<",sum:"<<totalBytes;
 //    if(bytesRead>0 && totalBytes>0)
 //    {
 //        ui->progressBar->setValue(bytesRead * 100 / totalBytes);
@@ -120,7 +126,7 @@ void MainWindow::reply_Finished()
 {
     //ui->progressBar->hide();
 
-#if 1 /************输出到屏幕************/
+#if 0 /************输出到屏幕************/
     //int num = 14;
     QByteArray all = m_reply->readAll();
 
@@ -134,7 +140,7 @@ void MainWindow::reply_Finished()
    // ui->out_Text->append("<font color=\"#00FF00\">绿色字体</font> ");
     //ui->out_Text->append("<font color=\"#0000FF\">蓝色字体</font> ");
 #else   /************输出到文件************/
-    QFile file("F:/data.html");
+    QFile file("D:/tmp/data.txt");
     file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append);
     QTextStream out(&file);
     out<<m_reply->readAll()<<endl;
@@ -177,11 +183,25 @@ void MainWindow::reply_Finished()
 
 void MainWindow::on_work_Btn_clicked()
 {
-    QString rootUrl = "https://yingtt.com";
-    QString machUrl = "/vodplay/";
+    uint nWebType = 0;
+    QString rootUrl;
+    switch (ui->comboBox_Web->currentIndex())
+    {
+    case 0:
+        nWebType = WEBTYPE_DIANYINTT;
+        rootUrl = DIANYINTT;
+        break;
+    case 1:
+        nWebType =  WEBTYPE_YINHUA;
+        rootUrl = YINHUA;
+        break;
+    default:
+        return;
+    }
+
     // 创建线程工作
     m_worker = new Worker;
-    m_worker->start_thread(rootUrl,machUrl);
+    m_worker->start_thread(rootUrl, nWebType);
 }
 
 void MainWindow::on_show_Btn_clicked()

@@ -162,6 +162,32 @@
        <widget class="QWidget" name="widget_4" native="true">
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
+          <widget class="QComboBox" name="comboBox_Web">
+           <item>
+            <property name="text">
+             <string>电影天堂</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>樱花动漫</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboBox_Src">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>视频详情页</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
           <widget class="QWidget" name="widget_2" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>

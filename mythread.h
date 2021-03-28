@@ -1,4 +1,4 @@
-#ifndef MYTHREAD_H
+﻿#ifndef MYTHREAD_H
 #define MYTHREAD_H
 
 #include <QObject>
@@ -16,8 +16,7 @@ signals:
     //void Threadfinish(); //线程完成时的信号
 public slots:
     //需要在线程中执行的槽函数
-    void slot_StartMyThread(QString rootURL, QString machURL,
-                            QString tagName, QString attrName);
+    void slot_StartMyThread(QString rootURL,uint nWebType);
 private:
     QNetworkAccessManager* m_manager;
 };
