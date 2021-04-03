@@ -1,14 +1,15 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QEventLoop>
+#include <QFile>
 #include <QMainWindow>
+#include <QMap>
+#include <QMessageBox>
 #include <QNetworkAccessManager>
+#include <QNetworkCookie>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QEventLoop>
-#include <QNetworkCookie>
-#include <QFile>
-#include <QMessageBox>
 
 #include "worker.h"
 
@@ -32,14 +33,15 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-
     QString m_URL;               // 待爬取的URL
     //QEventLoop m_loop;           // 事件循环
     QNetworkRequest m_request;  // 请求
     QNetworkReply* m_reply;     // 响应
 
-    QNetworkAccessManager* m_manager;
-    Worker* m_worker;
+    QNetworkAccessManager *m_manager;
+
+    //Worker* m_worker;
+    //QMap<Worker *, int> m_workermap;
 
 private slots:
     // 准备接受回调

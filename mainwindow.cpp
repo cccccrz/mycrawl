@@ -1,13 +1,15 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QMutexLocker>
 #include <QSslConfiguration>
 #include <QSslSocket>
 #include <QVariant>
+
+#include "common.h"
+#include "databaseop.h"
 #include "html/ParserDom.h"
 #include "table.hpp"
-#include "interface.h"
-#include <QMutexLocker>
 
 using namespace std;
 
@@ -24,14 +26,13 @@ MainWindow::MainWindow(QWidget *parent)
    // 隐藏进度条
     //ui->progressBar->hide();
     // 初始化
-    m_manager = new QNetworkAccessManager(this);
+    m_manager = Common::getNetManager();
 
-
-
-    //m_URL = "http://www.yhdm.io/";
-
-    //ui->comboBox->clear();
-
+    if (!DatabaseOp::openDatabase("localhost", "crawl", "root", "123456")) {
+        qDebug() << "mysql open failed";
+    } else {
+        qDebug() << "mysql open successed";
+    }
 
     /********* test **********/
     //检测QT支持的协议 //("ftp", "file", "qrc", "http", "https", "data")
@@ -46,8 +47,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    DatabaseOp::closeDatabase();
 
-    //delete m_manager;
+    delete m_manager;
     delete ui;
 }
 
@@ -200,8 +202,8 @@ void MainWindow::on_work_Btn_clicked()
     }
 
     // 创建线程工作
-    m_worker = new Worker;
-    m_worker->start_thread(rootUrl, nWebType);
+    Worker *pWorker = new Worker();
+    pWorker->start_thread(rootUrl, nWebType);
 }
 
 void MainWindow::on_show_Btn_clicked()

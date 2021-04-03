@@ -8,6 +8,7 @@ Worker::Worker(QObject *parent) : QObject(parent)
     m_myThread= new MyThread();
     m_myThread->moveToThread(subthread);
 
+    //m_threadId = QThread::currentThreadId();
     // 注册工作信号
     connect(this, &Worker::sig_startThread, m_myThread, &MyThread::slot_StartMyThread);
     //connect(m_myThread, SIGNAL(Threadfinish()), this, SLOT(slot_finishThread()));
@@ -17,8 +18,12 @@ Worker::Worker(QObject *parent) : QObject(parent)
 
 void Worker::start_thread(QString rootURL, uint nWebType)
 {
-    qDebug() << "main threadID : " << QThread::currentThread();
+    qDebug() << "main thread : " << QThread::currentThread();
+    qDebug() << "main threadID : " << QThread::currentThreadId();
     subthread->start(); //开启线程
+    //    if (m_myThread->m_flag) {
+    //        subthread->exit();
+    //    }
     emit sig_startThread(rootURL, nWebType); //通过信号通知子线程任务
 }
 

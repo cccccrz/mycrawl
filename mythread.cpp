@@ -1,12 +1,17 @@
 ﻿#include "mythread.h"
-#include <QDebug>
+#include "common.h"
+#include "databaseop.h"
 #include "mycrawl.h"
+
 #include <QMutexLocker>
+
+#define MYSQL
+
 QMutex g_mutex;
 
-MyThread::MyThread(QObject *parent) : QObject(parent)
+MyThread::MyThread(QObject *parent) : QObject(parent), m_flag(false)
 {
-    m_manager = new QNetworkAccessManager(this);
+    m_manager = Common::getNetManager();
 }
 
 MyThread::~MyThread()
@@ -18,12 +23,17 @@ MyThread::~MyThread()
 void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 {
     //打印线程ID
-    qDebug() << "kid " << "threadID : " << QThread::currentThread();
+    qDebug() << "kid  thread : " << QThread::currentThread();
+    qDebug() << "kid  threadID : " << QThread::currentThreadId();
 
     // 爬取根URL，获取任务列表
+#ifdef MYSQL
     Mycrawl mycrawl(rootURL);
     mycrawl.get(m_manager, nWebType);
-
+#else
+    Mycrawl mycrawl(rootURL);
+    mycrawl.get(m_manager, nWebType);
+#endif
     // 开始任务
     while (1)
     {
@@ -34,16 +44,25 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         // URL去重
         do
         {
-            if(MyTable::GetInstance()->TodoTableIsEmpty())
-            {
-                //qDebug()<<"work over"<<endl;
+#ifdef MYSQL
+            todo_url = DatabaseOp::Todo_PoP("todo_yinhua");
+            if (todo_url.isNull()) {
+                qDebug() << "work over";
                 return; // 任务完成
             }
 
+            if (DatabaseOp::isExist("visited_yinhua", todo_url)) {
+                continue;
+            }
+#else
+            if(MyTable::GetInstance()->TodoTableIsEmpty())
+            {
+                //qDebug()<<"work over";
+                return; // 任务完成
+            }
             g_mutex.lock();
             todo_url = MyTable::GetInstance()->PopTodoTable();
             g_mutex.unlock();
-
             // URL 去重
             for(auto i : MyTable::GetInstance()->GetVisitedTable())
             {
@@ -59,8 +78,14 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
                 isRepeat = false;
                 continue;
             }
+#endif
         }while(isRepeat);// 爬取不重复url
 
+#ifdef MYSQL
+        DatabaseOp::Visited_Push("visited_yinhua", todo_url);
+        Mycrawl todo_crawl(todo_url);
+        todo_crawl.get(m_manager, nWebType);
+#else
         {
             QMutexLocker mutexlocker(&g_mutex);
             MyTable::GetInstance()->PushVisitedTable(todo_url);
@@ -69,10 +94,10 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
             Mycrawl todo_crawl(todo_url);
             todo_crawl.get(m_manager, nWebType);
         }
+#endif
         // 休息1S
-        //QThread::sleep(5);
+        QThread::sleep(10);
     }
-
 
     //返回线程完成信号
     //emit Threadfinish();

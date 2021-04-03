@@ -1,7 +1,7 @@
 ﻿#include "mycrawl.h"
+#include "common.h"
 #include <QDebug>
 #include <QMessageBox>
-#include "interface.h"
 
 Mycrawl::Mycrawl(QString rootUrl):m_rootURL(rootUrl)
 {    

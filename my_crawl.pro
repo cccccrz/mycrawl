@@ -1,4 +1,4 @@
-QT       += core gui network
+QT       += core gui network sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +27,8 @@ DEPENDPATH += $$PWD/include
 #LIBS += -L$$PWD/lib -lhtmlcxx
 
 SOURCES += \
+    common.cpp \
+    databaseop.cpp \
     main.cpp \
     mainwindow.cpp \
     html/utils.cc \
@@ -39,11 +41,12 @@ SOURCES += \
     mythread.cpp \
     parser.cpp \
     worker.cpp \
-    interface.cpp \
     parserdianyintt.cpp \
     parseryinhua.cpp
 
 HEADERS += \
+    common.h \
+    databaseop.h \
     mainwindow.h \
     html/utils.h \
     html/Uri.h \
@@ -61,7 +64,6 @@ HEADERS += \
     parser.h \
     table.hpp \
     worker.h \
-    interface.h \
     parserdianyintt.h \
     parseryinhua.h
 
