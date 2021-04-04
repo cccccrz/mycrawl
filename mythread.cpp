@@ -5,13 +5,14 @@
 
 #include <QMutexLocker>
 
-#define MYSQL
 
+#ifndef MYSQL
 QMutex g_mutex;
+#endif
 
-MyThread::MyThread(QObject *parent) : QObject(parent), m_flag(false)
+MyThread::MyThread(QObject *parent) : QObject(parent)
 {
-    m_manager = Common::getNetManager();
+    m_manager = new QNetworkAccessManager(this);
 }
 
 MyThread::~MyThread()
@@ -28,8 +29,8 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 
     // 爬取根URL，获取任务列表
 #ifdef MYSQL
-    Mycrawl mycrawl(rootURL);
-    mycrawl.get(m_manager, nWebType);
+    //Mycrawl mycrawl(rootURL);
+    //mycrawl.get(m_manager, nWebType);
 #else
     Mycrawl mycrawl(rootURL);
     mycrawl.get(m_manager, nWebType);
@@ -45,13 +46,17 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         do
         {
 #ifdef MYSQL
-            todo_url = DatabaseOp::Todo_PoP("todo_yinhua");
-            if (todo_url.isNull()) {
+            todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
+            if (todo_url.isNull())
+            {
+                continue;   // 多线程
                 qDebug() << "work over";
-                return; // 任务完成
+                //return; // 任务完成
             }
 
-            if (DatabaseOp::isExist("visited_yinhua", todo_url)) {
+            if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
+            {
+                qDebug()<<"continue";
                 continue;
             }
 #else
@@ -82,7 +87,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         }while(isRepeat);// 爬取不重复url
 
 #ifdef MYSQL
-        DatabaseOp::Visited_Push("visited_yinhua", todo_url);
+        DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
         Mycrawl todo_crawl(todo_url);
         todo_crawl.get(m_manager, nWebType);
 #else
@@ -96,7 +101,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         }
 #endif
         // 休息1S
-        QThread::sleep(10);
+        //QThread::sleep(10);
     }
 
     //返回线程完成信号

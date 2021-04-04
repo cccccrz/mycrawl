@@ -7,6 +7,8 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
+//QMutex db_mutex;
+
 DatabaseOp::DatabaseOp(QObject *parent) : QObject(parent) {}
 
 bool DatabaseOp::openDatabase(QString hostName, QString dbName, QString user, QString passwd)
@@ -45,13 +47,22 @@ void DatabaseOp::closeDatabase()
 
 bool DatabaseOp::isExist(QString table, QString value, QString column)
 {
+    if(table.isNull() || value.isNull() || column.isNull())
+    {
+        return false;
+    }
+    //db_mutex.lock();
+
     QString sql = QString("SELECT %1 FROM %2 WHERE %1='%3'").arg(column).arg(table).arg(value);
     QSqlQuery query;
-    if (!query.exec(sql)) {
+    if (!query.exec(sql))
+    {
+        //db_mutex.unlock();
         qDebug() << "select err, sql:" << sql;
         return false;
     }
 
+    //db_mutex.unlock();
     return query.size();
 }
 
@@ -80,15 +91,14 @@ bool DatabaseOp::insertDB(QString table, QVariantList values)
     QSqlDatabase db = QSqlDatabase::database();
     // 开启事务
     db.transaction();
-    if (query.exec(sql)) {
-        db.commit();
-        return true;
-    } else {
-        // 回滚
-        db.rollback();
-        qDebug() << "insert fail, sql:" << sql;
+    if (!query.exec(sql))
+    {
+        //qDebug() << "insert fail, sql:" << sql;
         return false;
     }
+    db.commit();
+
+    return true;
 }
 
 bool DatabaseOp::insertDB(QString table, QString value)
@@ -98,29 +108,40 @@ bool DatabaseOp::insertDB(QString table, QString value)
     QSqlDatabase db = QSqlDatabase::database();
     // 开启事务
     db.transaction();
-    if (query.exec(sql)) {
-        db.commit();
-        return true;
-    } else {
-        // 回滚
-        db.rollback();
-        qDebug() << "insert fail, sql:" << sql;
+    if (!query.exec(sql))
+    {
+        //qDebug() << "insert fail, sql:" << sql;
         return false;
     }
+    db.commit();
+
+    return true;
 }
 
 bool DatabaseOp::deleteDB(QString table, QString filter)
 {
+    if(table.isNull() || filter.isNull())
+    {
+        return false;
+    }
+
+    //db_mutex.lock();
+
     QSqlQuery query;
     QSqlDatabase db = QSqlDatabase::database();
     QString sql = QString("DELETE FROM %1 WHERE %2").arg(table).arg(filter);
 
     db.transaction();
-    if (query.exec(sql)) {
+    if (query.exec(sql))
+    {
         db.commit();
+        //db_mutex.unlock();
+
         return true;
-    } else {
-        db.rollback();
+    } else
+    {
+        //db_mutex.unlock();
+        //db.rollback();
         qDebug() << "delete fail, sql:" << sql;
         return false;
     }
@@ -128,6 +149,10 @@ bool DatabaseOp::deleteDB(QString table, QString filter)
 
 bool DatabaseOp::Result_Push(QString table, QString url, QString info)
 {
+    if(table.isNull() || url.isNull() || info.isNull())
+    {
+        return false;
+    }
     QVariantList values;
     values << info << url;
     return insertDB(table, values);
@@ -135,27 +160,45 @@ bool DatabaseOp::Result_Push(QString table, QString url, QString info)
 
 bool DatabaseOp::Visited_Push(QString table, QString url)
 {
+    if(table.isNull() || url.isNull())
+    {
+        return false;
+    }
     return insertDB(table, url);
 }
 
 bool DatabaseOp::Todo_Push(QString table, QString url)
 {
+    if(table.isNull() || url.isNull())
+    {
+        return false;
+    }
     return insertDB(table, url);
 }
 
 QString DatabaseOp::Todo_PoP(QString table)
 {
+    if(table.isNull())
+    {
+        return QString();
+    }
+    //db_mutex.lock();
+
     QSqlQuery query;
-    QString url = "";
+    QString url;
     QString sql = QString("SELECT * FROM %1").arg(table);
 
-    if (!query.exec(sql)) {
+    if (!query.exec(sql))
+    {
         qDebug() << "select err, sql:" << sql;
-        return url;
+        //db_mutex.unlock();
+
+        return QString();
     }
     query.next();
     url = query.value(0).toString();
     deleteDB(table, "url='" + url + "'");
+    //db_mutex.unlock();
 
     return url;
 }

@@ -10,6 +10,13 @@
 #define DIANYINTT "https://yingtt.com"
 #define YINHUA "http://www.yhdm.io"
 
+/* 使用MySQL */
+#define MYSQL
+/* mysql 表 */
+#define TABLE_TODO_YINHUA "todo_yinhua"
+#define TABLE_VISITED_YINHUA "visited_yinhua"
+#define TABLE_RESULT_YINHUA "result_yinhua"
+
 /* 网站接口声明 */
 #ifdef DIANYINTT
 extern Parser *CreateParser_DIANYINTT(QString html);

@@ -1,9 +1,9 @@
 ﻿#ifndef MYTHREAD_H
 #define MYTHREAD_H
 
-#include <QNetworkAccessManager>
 #include <QObject>
 #include <QThread>
+#include <QNetworkAccessManager>
 
 class MyThread : public QObject
 {
@@ -20,9 +20,6 @@ public slots:
 
 private:
     QNetworkAccessManager* m_manager;
-
-public:
-    bool m_flag; // 线程失败标志
 };
 
 #endif // MYTHREAD_H

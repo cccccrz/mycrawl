@@ -13,6 +13,10 @@ Mycrawl::~Mycrawl()
 
 void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
 {
+    if(m_rootURL.isNull())
+    {
+        return;
+    }
 //    QSslConfiguration cfg = m_request.sslConfiguration();
 //    cfg.setPeerVerifyMode(QSslSocket::VerifyNone);
 //    cfg.setProtocol(QSsl::TlsV1SslV3);

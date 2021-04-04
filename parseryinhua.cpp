@@ -1,7 +1,9 @@
 ﻿#include "parseryinhua.h"
 
-#include <QTextCodec>
+#include "common.h"
+#include "databaseop.h"
 #include <QDebug>
+#include <QTextCodec>
 
 /*  樱花动漫详情页  */
 /*  <a href="/show/273.html" title="妖精的尾巴"> */
@@ -105,8 +107,13 @@ void ParserYinhua::Parse()
                     if(m_it->attribute("title").first) // 匹配结果标题
                     {
                         QString title = m_it->attribute("title").second.c_str();
+#ifdef MYSQL
+                        DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_resURL, title);
+#else
                         QString resurl = title + " " + m_rootURL + m_resURL;
                         MyTable::GetInstance()->PushResultTable(resurl);
+#endif
+                        //continue;
                     }
                 }
 
@@ -122,9 +129,18 @@ void ParserYinhua::Parse()
                 if(m_resURL.toStdString().compare(0,4,"http")!=0) // 过滤非http/https协议
                     continue;
 
-                /* 加入任务 */
+                    /* 加入任务 */
+#ifdef MYSQL
+                // URL去重
+                if(!DatabaseOp::isExist(TABLE_VISITED_YINHUA,m_resURL))
+                {
+                    DatabaseOp::Todo_Push(TABLE_TODO_YINHUA, m_resURL);
+                }
+                //qDebug()<<"continue";
+#else
                 MyTable::GetInstance()->PushTodoTable(m_resURL);
                 //qDebug()<<"[TODO]:"<<m_resURL;
+#endif
             }
         }
     }
