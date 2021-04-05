@@ -9,6 +9,7 @@
 #ifndef MYSQL
 QMutex g_mutex;
 #endif
+uint MyThread::thread_flag = 0; // 1 表示退出
 
 MyThread::MyThread(QObject *parent) : QObject(parent)
 {
@@ -24,8 +25,8 @@ MyThread::~MyThread()
 void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 {
     //打印线程ID
-    qDebug() << "kid  thread : " << QThread::currentThread();
-    qDebug() << "kid  threadID : " << QThread::currentThreadId();
+    //qDebug() << "kid  thread : " << QThread::currentThread();
+    qDebug() << "kid  threadID : " << QThread::currentThreadId() <<"url:"<<rootURL;
 
     // 爬取根URL，获取任务列表
 #ifdef MYSQL
@@ -47,11 +48,11 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         {
 #ifdef MYSQL
             todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
-            if (todo_url.isNull())
+            if (todo_url.isNull() || thread_flag==1)
             {
-                continue;   // 多线程
                 qDebug() << "work over";
-                //return; // 任务完成
+                //continue;   // 多线程
+                return; // 任务完成
             }
 
             if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
@@ -106,4 +107,9 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 
     //返回线程完成信号
     //emit Threadfinish();
+}
+
+void MyThread::on_thread_finished_btn_clicked()
+{
+    thread_flag = 1;
 }

@@ -12,12 +12,17 @@ public:
     explicit MyThread(QObject *parent = nullptr);
     ~MyThread();
 
+    static void on_thread_finished_btn_clicked();
 signals:
-    //void Threadfinish(); //线程完成时的信号
+    void Threadfinish(); //线程完成时的信号
+
 public slots:
     //需要在线程中执行的槽函数
     void slot_StartMyThread(QString rootURL, uint nWebType);
 
+public:
+    //  线程状态标志
+    static uint thread_flag;
 private:
     QNetworkAccessManager* m_manager;
 };

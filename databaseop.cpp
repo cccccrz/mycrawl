@@ -6,8 +6,11 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QMutexLocker>
 
-//QMutex db_mutex;
+QMutex db_mutex;
+
+QSqlQuery DatabaseOp::query;
 
 DatabaseOp::DatabaseOp(QObject *parent) : QObject(parent) {}
 
@@ -34,6 +37,7 @@ bool DatabaseOp::openDatabase(QString hostName, QString dbName, QString user, QS
         QMessageBox::critical(nullptr, "ERROR", db.lastError().text());
         return false;
     }
+    query = QSqlQuery(db);
     return true;
 }
 
@@ -53,17 +57,50 @@ bool DatabaseOp::isExist(QString table, QString value, QString column)
     }
     //db_mutex.lock();
 
+    QMutexLocker locker(&db_mutex);
+
     QString sql = QString("SELECT %1 FROM %2 WHERE %1='%3'").arg(column).arg(table).arg(value);
-    QSqlQuery query;
+    //QSqlQuery query;
     if (!query.exec(sql))
     {
         //db_mutex.unlock();
-        qDebug() << "select err, sql:" << sql;
+        //qDebug() << "select err, sql:" << sql;
         return false;
     }
 
     //db_mutex.unlock();
     return query.size();
+}
+
+QVector<QVariantList> DatabaseOp::selectDatabase(QString table, QString filter)
+{
+    if(table.isNull() || filter.isNull())
+    {
+        qDebug()<<"select result err: input params err";
+        return QVector<QVariantList>();
+    }
+
+    QSqlQuery query;
+    QVector<QVariantList> list;
+    list.clear();
+    QString sql = QString("select * from %1 where %2").arg(table).arg(filter);
+    if(!query.exec(sql))
+    {
+        qDebug()<<"select err :sql"<<sql;
+        return QVector<QVariantList>();
+    }
+    qDebug()<<"sql:"<<sql;
+    while(query.next())
+    {
+        QVariantList sublist;
+        QSqlRecord record = query.record();
+        for(int i=0; i<record.count(); ++i)
+        {
+            sublist.append(record.value(i));
+        }
+        list.append(sublist);
+    }
+    return list;
 }
 
 //QVariantList values;
@@ -154,7 +191,7 @@ bool DatabaseOp::Result_Push(QString table, QString url, QString info)
         return false;
     }
     QVariantList values;
-    values << info << url;
+    values << url << info;
     return insertDB(table, values);
 }
 
@@ -184,13 +221,14 @@ QString DatabaseOp::Todo_PoP(QString table)
     }
     //db_mutex.lock();
 
-    QSqlQuery query;
+    QMutexLocker locker(&db_mutex);
+    //QSqlQuery query;
     QString url;
     QString sql = QString("SELECT * FROM %1").arg(table);
 
     if (!query.exec(sql))
     {
-        qDebug() << "select err, sql:" << sql;
+        //qDebug() << "select err, sql:" << sql;
         //db_mutex.unlock();
 
         return QString();

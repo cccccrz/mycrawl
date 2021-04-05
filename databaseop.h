@@ -2,6 +2,7 @@
 #define DATABASEOP_H
 
 #include <QObject>
+#include <QSqlQuery>
 
 class DatabaseOp : public QObject
 {
@@ -22,6 +23,9 @@ public:
     // 查询表中是否存在value
     static bool isExist(QString table, QString value, QString column = "url");
 
+    // 关键字查询
+    static  QVector<QVariantList> selectDatabase(QString table, QString filter);
+
 private:
     // 添加数据
     static bool insertDB(QString table, QVariantList value);
@@ -30,7 +34,8 @@ private:
     static bool deleteDB(QString table, QString filter);
 
 private:
-    QString m_dbType;
+    static QSqlQuery query;
+
 };
 
 #endif // DATABASEOP_H

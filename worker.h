@@ -25,7 +25,7 @@ private:
     QThread* subthread;
     void *m_threadId;
 public slots:
-    //void slot_finishThread(); //线程完成的槽函数
+    void slot_finishThread(); //线程完成的槽函数
 
 };
 

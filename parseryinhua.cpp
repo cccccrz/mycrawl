@@ -101,6 +101,7 @@ void ParserYinhua::Parse()
             {
                 m_resURL = m_it->attribute(m_attrName.toUtf8().data()).second.c_str();
 
+
                 /* 匹配结果URL */
                 if (m_resURL.toStdString().compare(0, (uint)m_matchURL.length(), m_matchURL.toStdString()) == 0)
                 {
@@ -108,7 +109,7 @@ void ParserYinhua::Parse()
                     {
                         QString title = m_it->attribute("title").second.c_str();
 #ifdef MYSQL
-                        DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_resURL, title);
+                        DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
 #else
                         QString resurl = title + " " + m_rootURL + m_resURL;
                         MyTable::GetInstance()->PushResultTable(resurl);
@@ -117,19 +118,19 @@ void ParserYinhua::Parse()
                     }
                 }
 
+                /***************************** URL 过滤 *****************************/
                 /* 匹配有效工作URL */
                 if (m_resURL.toStdString().compare(0, 1, "/") == 0)
                 {
                     m_resURL = m_rootURL + m_resURL;
                 }
-
                 /* 过滤无效URL */
                 if (m_resURL.compare(m_rootURL + '/') == 0) // 去除根URL
                     continue;
                 if(m_resURL.toStdString().compare(0,4,"http")!=0) // 过滤非http/https协议
                     continue;
 
-                    /* 加入任务 */
+                /************** 加入任务 ***************/
 #ifdef MYSQL
                 // URL去重
                 if(!DatabaseOp::isExist(TABLE_VISITED_YINHUA,m_resURL))

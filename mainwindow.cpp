@@ -5,18 +5,15 @@
 #include <QSslConfiguration>
 #include <QSslSocket>
 #include <QVariant>
+#include <QPushButton>
 
 #include "common.h"
 #include "databaseop.h"
 #include "html/ParserDom.h"
 #include "table.hpp"
+#include "mythread.h"
 
 using namespace std;
-
-#define BAIDU "https://www.baidu.com/s?wd="
-#define BINGCN "https://cn.bing.com/search?q="
-#define BINGFR "&ensearch=1"
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "mysql open successed";
     }
 
+//    connect(ui->thread_finished_btn, &QPushButton::clicked,[=](){
+//        emit MyThread::Threadfinish();
+//    });
     /********* test **********/
     //检测QT支持的协议 //("ftp", "file", "qrc", "http", "https", "data")
     //qDebug()<<m_manager->supportedSchemes();
@@ -183,6 +183,7 @@ void MainWindow::reply_Finished()
 
 //}
 
+/****************** 爬虫功能 *********************/
 void MainWindow::on_work_Btn_clicked()
 {
     uint nWebType = 0;
@@ -206,8 +207,56 @@ void MainWindow::on_work_Btn_clicked()
     pWorker->start_thread(rootUrl, nWebType);
 }
 
+/***************** 结果展示 *********************/
 void MainWindow::on_show_Btn_clicked()
 {
+    #ifdef MYSQL
+    QString table;
+    QStringList labels;
+    switch (ui->comboBox_Web->currentIndex())
+    {
+    case 0:
+        table = TABLE_RESULT_DIANYINTT;
+        labels <<"网址"<<"电影名";
+        break;
+    case 1:
+        labels <<"网址"<<"动漫名";
+        table = TABLE_RESULT_YINHUA;
+        break;
+    default:
+        return;
+    }
+    ui->tableWidget->clear();
+    // 设置列表属性
+    ui->tableWidget->setColumnCount(labels.size());
+    ui->tableWidget->setHorizontalHeaderLabels(labels);
+    // 选择行为, 单击选一行
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    // 只能选一行
+    ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    // 不允许编辑
+    //ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // 隔行变颜色
+    ui->tableWidget->setAlternatingRowColors(true);
+    // 单元格填满整个窗口
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    QString filter ="info like '%" + ui->sql_key->text()+"%'";
+    QVector<QVariantList> v = DatabaseOp::selectDatabase(table, filter);
+    if(v.isEmpty())
+    {
+        qDebug()<<"show result err: result is empty";
+        return;
+    }
+    ui->tableWidget->setRowCount(v.count());
+    for(int i=0; i<v.size(); ++i)
+    {
+        QVariantList sub = v.at(i);
+        ui->tableWidget->setItem(i,0, new QTableWidgetItem(sub.at(0).toString()));
+        ui->tableWidget->setItem(i,1, new QTableWidgetItem(sub.at(1).toString()));
+        qDebug()<<"1:"<<sub.at(0).toString()<<" 2:"<<sub.at(1).toString();
+    }
+    #else
     for(int i=0; i<10; i++)
     {
         if (MyTable::GetInstance()->ResultTableIsEmpty())
@@ -217,6 +266,7 @@ void MainWindow::on_show_Btn_clicked()
         QString resUrl = MyTable::GetInstance()->PopResultTable();
         ui->listWidget->addItem(resUrl);
     }
+#endif
 }
 
 void MainWindow::on_btn_search_clicked()
@@ -273,3 +323,8 @@ void MainWindow::on_btn_search_clicked()
     connect(m_reply,&QNetworkReply::finished,this,&MainWindow::reply_Finished);
 }
 
+
+void MainWindow::on_thread_finished_btn_clicked()
+{
+    MyThread::on_thread_finished_btn_clicked();
+}
