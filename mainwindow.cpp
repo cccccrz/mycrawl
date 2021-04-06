@@ -8,7 +8,7 @@
 #include <QPushButton>
 
 #include "common.h"
-#include "databaseop.h"
+//#include "databaseop.h"
 #include "html/ParserDom.h"
 #include "table.hpp"
 #include "mythread.h"
@@ -25,11 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
     // 初始化
     m_manager = Common::getNetManager();
 
-    if (!DatabaseOp::openDatabase("localhost", "crawl", "root", "123456")) {
-        qDebug() << "mysql open failed";
-    } else {
-        qDebug() << "mysql open successed";
-    }
+//    if (!DatabaseOp::openDatabase("localhost", "crawl", "root", "123456")) {
+//        qDebug() << "mysql open failed";
+//    } else {
+//        qDebug() << "mysql open successed";
+//    }
 
 //    connect(ui->thread_finished_btn, &QPushButton::clicked,[=](){
 //        emit MyThread::Threadfinish();
@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    DatabaseOp::closeDatabase();
+    //DatabaseOp::closeDatabase();
 
     delete m_manager;
     delete ui;
@@ -242,7 +242,8 @@ void MainWindow::on_show_Btn_clicked()
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     QString filter ="info like '%" + ui->sql_key->text()+"%'";
-    QVector<QVariantList> v = DatabaseOp::selectDatabase(table, filter);
+    //QVector<QVariantList> v = DatabaseOp::selectDatabase(table, filter);
+    QVector<QVariantList> v = Select_Info_DB(table, filter);
     if(v.isEmpty())
     {
         qDebug()<<"show result err: result is empty";
@@ -254,17 +255,7 @@ void MainWindow::on_show_Btn_clicked()
         QVariantList sub = v.at(i);
         ui->tableWidget->setItem(i,0, new QTableWidgetItem(sub.at(0).toString()));
         ui->tableWidget->setItem(i,1, new QTableWidgetItem(sub.at(1).toString()));
-        qDebug()<<"1:"<<sub.at(0).toString()<<" 2:"<<sub.at(1).toString();
-    }
-    #else
-    for(int i=0; i<10; i++)
-    {
-        if (MyTable::GetInstance()->ResultTableIsEmpty())
-        {
-            continue;
-        }
-        QString resUrl = MyTable::GetInstance()->PopResultTable();
-        ui->listWidget->addItem(resUrl);
+        //qDebug()<<"1:"<<sub.at(0).toString()<<" 2:"<<sub.at(1).toString();
     }
 #endif
 }

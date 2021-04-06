@@ -1,9 +1,9 @@
 ﻿#include "mythread.h"
-#include "common.h"
-#include "databaseop.h"
+//#include "databaseop.h"
+//#include <QMutexLocker>
 #include "mycrawl.h"
+#include "common.h"
 
-#include <QMutexLocker>
 
 
 #ifndef MYSQL
@@ -47,7 +47,8 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         do
         {
 #ifdef MYSQL
-            todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
+            //todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
+            todo_url = Pop_Todo(TABLE_TODO_YINHUA);
             if (todo_url.isNull() || thread_flag==1)
             {
                 qDebug() << "work over";
@@ -55,7 +56,8 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
                 return; // 任务完成
             }
 
-            if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
+            //if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
+            if (IsExist(TABLE_VISITED_YINHUA, todo_url))    // ！=0 访问表中存在
             {
                 qDebug()<<"continue";
                 continue;
@@ -88,7 +90,8 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         }while(isRepeat);// 爬取不重复url
 
 #ifdef MYSQL
-        DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
+        //DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
+        Push_Visited(TABLE_VISITED_YINHUA, todo_url);
         Mycrawl todo_crawl(todo_url);
         todo_crawl.get(m_manager, nWebType);
 #else

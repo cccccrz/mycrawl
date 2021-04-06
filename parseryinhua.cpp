@@ -1,7 +1,7 @@
 ﻿#include "parseryinhua.h"
 
 #include "common.h"
-#include "databaseop.h"
+//#include "databaseop.h"
 #include <QDebug>
 #include <QTextCodec>
 
@@ -109,7 +109,8 @@ void ParserYinhua::Parse()
                     {
                         QString title = m_it->attribute("title").second.c_str();
 #ifdef MYSQL
-                        DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
+                        Push_Result(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
+                        //DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
 #else
                         QString resurl = title + " " + m_rootURL + m_resURL;
                         MyTable::GetInstance()->PushResultTable(resurl);
@@ -133,10 +134,14 @@ void ParserYinhua::Parse()
                 /************** 加入任务 ***************/
 #ifdef MYSQL
                 // URL去重
-                if(!DatabaseOp::isExist(TABLE_VISITED_YINHUA,m_resURL))
+                if(IsExist(TABLE_VISITED_YINHUA, m_resURL)==0)
                 {
-                    DatabaseOp::Todo_Push(TABLE_TODO_YINHUA, m_resURL);
+                    Push_Todo(TABLE_TODO_YINHUA, m_resURL);
                 }
+//                if(!DatabaseOp::isExist(TABLE_VISITED_YINHUA,m_resURL))
+//                {
+//                    DatabaseOp::Todo_Push(TABLE_TODO_YINHUA, m_resURL);
+//                }
                 //qDebug()<<"continue";
 #else
                 MyTable::GetInstance()->PushTodoTable(m_resURL);

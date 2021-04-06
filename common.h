@@ -45,6 +45,17 @@ enum WEB_TYPE {
 /************* 网站对象创建方法 *************/
 Parser *TTY_CreatParser(uint nWebType, QString html);
 
+/************* 数据库并发操作 ***************/
+bool Push_Result(QString table, QString url, QString info);
+bool Push_Visited(QString table, QString url);
+bool Push_Todo(QString table, QString url);
+QString Pop_Todo(QString table);
+// 查询表中是否存在value ; =0 不存在 <0 失败
+int IsExist(QString table, QString value);
+// 关键字查询
+ QVector<QVariantList> Select_Info_DB(QString table, QString filter);
+
+
 class Common : public QObject
 {
     Q_OBJECT

@@ -42,7 +42,8 @@ SOURCES += \
     parser.cpp \
     worker.cpp \
     parserdianyintt.cpp \
-    parseryinhua.cpp
+    parseryinhua.cpp \
+    databasecommon.cpp
 
 HEADERS += \
     common.h \
@@ -65,7 +66,8 @@ HEADERS += \
     table.hpp \
     worker.h \
     parserdianyintt.h \
-    parseryinhua.h
+    parseryinhua.h \
+    databasecommon.h
 
 FORMS += \
     mainwindow.ui
