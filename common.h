@@ -38,8 +38,14 @@ extern Parser *CreateParser_YINHUA(QString html);
 
 /************* 网站类型枚举 *************/
 enum WEB_TYPE {
+    WEBTYPE_YINHUA = 0,
     WEBTYPE_DIANYINTT = 1,
-    WEBTYPE_YINHUA = 2,
+};
+
+enum THREAD_STATE{
+    THREAD_START = 0,
+    THREAD_WAIT = 1,
+    THREAD_STOP = 2,
 };
 
 /************* 网站对象创建方法 *************/

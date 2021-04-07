@@ -1,4 +1,5 @@
 ﻿#include "worker.h"
+#include "common.h"
 #include <QDebug>
 
 Worker::Worker(QObject *parent) : QObject(parent)
@@ -18,13 +19,13 @@ Worker::Worker(QObject *parent) : QObject(parent)
 
 void Worker::start_thread(QString rootURL, uint nWebType)
 {
-    qDebug() << "main thread : " << QThread::currentThread();
-    qDebug() << "main threadID : " << QThread::currentThreadId();
+    //qDebug() << "main thread : " << QThread::currentThread();
+    //qDebug() << "main threadID : " << QThread::currentThreadId();
     subthread->start(); //开启线程
     //    if (m_myThread->m_flag) {
     //        subthread->exit();
     //    }
-    MyThread::thread_flag = 0;
+    MyThread::thread_flag = THREAD_START;   // 线程状态
     emit sig_startThread(rootURL, nWebType); //通过信号通知子线程任务
 }
 

@@ -164,7 +164,7 @@ QVector<QVariantList> Select_Info_DB(QString table, QString filter)
         qDebug() <<__FUNCTION__<< "Select Error" << __LINE__;
         return QVector<QVariantList>();
     }
-    qDebug()<<"sql:"<<sql;
+    //qDebug()<<"sql:"<<sql;
     while(query->next())
     {
         QVariantList sublist;

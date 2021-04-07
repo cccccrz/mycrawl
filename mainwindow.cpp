@@ -190,13 +190,13 @@ void MainWindow::on_work_Btn_clicked()
     QString rootUrl;
     switch (ui->comboBox_Web->currentIndex())
     {
-    case 0:
-        nWebType = WEBTYPE_DIANYINTT;
-        rootUrl = DIANYINTT;
-        break;
-    case 1:
+    case WEBTYPE_YINHUA:
         nWebType =  WEBTYPE_YINHUA;
         rootUrl = YINHUA;
+        break;
+    case WEBTYPE_DIANYINTT:
+        nWebType = WEBTYPE_DIANYINTT;
+        rootUrl = DIANYINTT;
         break;
     default:
         return;
@@ -215,13 +215,13 @@ void MainWindow::on_show_Btn_clicked()
     QStringList labels;
     switch (ui->comboBox_Web->currentIndex())
     {
-    case 0:
-        table = TABLE_RESULT_DIANYINTT;
-        labels <<"网址"<<"电影名";
-        break;
-    case 1:
+    case WEBTYPE_YINHUA:
         labels <<"网址"<<"动漫名";
         table = TABLE_RESULT_YINHUA;
+        break;
+    case WEBTYPE_DIANYINTT:
+        table = TABLE_RESULT_DIANYINTT;
+        labels <<"网址"<<"电影名";
         break;
     default:
         return;
@@ -318,4 +318,14 @@ void MainWindow::on_btn_search_clicked()
 void MainWindow::on_thread_finished_btn_clicked()
 {
     MyThread::on_thread_finished_btn_clicked();
+}
+
+void MainWindow::on_thread_wait_btn_clicked()
+{
+    MyThread::on_thread_wait_btn_clicked();
+}
+
+void MainWindow::on_thread_continue_btn_clicked()
+{
+    MyThread::on_thread_continue_btn_clicked();
 }

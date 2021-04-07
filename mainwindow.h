@@ -56,5 +56,7 @@ private slots:
     void on_show_Btn_clicked();
     void on_btn_search_clicked();
     void on_thread_finished_btn_clicked();
+    void on_thread_wait_btn_clicked();
+    void on_thread_continue_btn_clicked();
 };
 #endif // MAINWINDOW_H

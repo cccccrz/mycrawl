@@ -35,7 +35,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
     qDebug()<<"crawl "<<m_rootURL<<"......";
     //connect(m_reply,&QNetworkReply::finished,this,&Mycrawl::reply_Finished);
 
-    // 事件循环，同步爬取g
+    // 事件循环，同步爬取
     QEventLoop loop;
     connect(m_reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec(QEventLoop::ExcludeUserInputEvents);
@@ -55,7 +55,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
         m_reply = nullptr;
         return;
     }
-    qDebug()<<"done!"<<endl;
+    qDebug()<<"done!";
 
     //创建对应网站的解析器，解析
     m_parser = TTY_CreatParser(nWebType, replyData);

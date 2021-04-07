@@ -13,6 +13,8 @@ public:
     ~MyThread();
 
     static void on_thread_finished_btn_clicked();
+    static void on_thread_wait_btn_clicked();
+    static void on_thread_continue_btn_clicked();
 signals:
     void Threadfinish(); //线程完成时的信号
 
@@ -22,7 +24,7 @@ public slots:
 
 public:
     //  线程状态标志
-    static uint thread_flag;
+    static int thread_flag;
 private:
     QNetworkAccessManager* m_manager;
 };

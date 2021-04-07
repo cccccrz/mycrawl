@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>744</width>
+    <width>1018</width>
     <height>934</height>
    </rect>
   </property>
@@ -164,12 +164,12 @@
              <widget class="QComboBox" name="comboBox_Web">
               <item>
                <property name="text">
-                <string>电影天堂</string>
+                <string>樱花动漫</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>樱花动漫</string>
+                <string>电影天堂</string>
                </property>
               </item>
              </widget>
@@ -205,7 +205,27 @@
                <item>
                 <widget class="QPushButton" name="work_Btn">
                  <property name="text">
-                  <string>开始任务</string>
+                  <string> 创建任务</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="thread_wait_btn">
+                 <property name="text">
+                  <string> 暂停任务</string>
                  </property>
                 </widget>
                </item>
@@ -217,6 +237,26 @@
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>30</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="thread_continue_btn">
+                 <property name="text">
+                  <string> 继续任务</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
                    <height>20</height>
                   </size>
                  </property>
@@ -307,6 +347,22 @@
                <item>
                 <widget class="QLineEdit" name="sql_key"/>
                </item>
+               <item>
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Minimum</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>70</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </widget>
             </item>
@@ -319,11 +375,11 @@
                   <enum>Qt::Horizontal</enum>
                  </property>
                  <property name="sizeType">
-                  <enum>QSizePolicy::Minimum</enum>
+                  <enum>QSizePolicy::Fixed</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>40</width>
+                   <width>120</width>
                    <height>20</height>
                   </size>
                  </property>
@@ -342,11 +398,11 @@
                   <enum>Qt::Horizontal</enum>
                  </property>
                  <property name="sizeType">
-                  <enum>QSizePolicy::Minimum</enum>
+                  <enum>QSizePolicy::Fixed</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
-                   <width>40</width>
+                   <width>120</width>
                    <height>20</height>
                   </size>
                  </property>

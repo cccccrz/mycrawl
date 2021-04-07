@@ -9,7 +9,7 @@
 #ifndef MYSQL
 QMutex g_mutex;
 #endif
-uint MyThread::thread_flag = 0; // 1 表示退出
+int MyThread::thread_flag = THREAD_STOP; //
 
 MyThread::MyThread(QObject *parent) : QObject(parent)
 {
@@ -26,7 +26,23 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 {
     //打印线程ID
     //qDebug() << "kid  thread : " << QThread::currentThread();
-    qDebug() << "kid  threadID : " << QThread::currentThreadId() <<"url:"<<rootURL;
+    qDebug() <<"["<<QThread::currentThread()<<"]thread start work," <<"root url:"<<rootURL;
+
+    QString visited_table;
+    QString todo_table;
+    switch (nWebType)
+    {
+    case WEBTYPE_YINHUA:
+        visited_table = TABLE_VISITED_YINHUA;
+        todo_table = TABLE_TODO_YINHUA;
+        break;
+    case WEBTYPE_DIANYINTT:
+        visited_table = TABLE_VISITED_DIANYINTT;
+        todo_table = TABLE_TODO_DIANYINTT;
+        break;
+    default:
+        return;
+    }
 
     // 爬取根URL，获取任务列表
 #ifdef MYSQL
@@ -39,25 +55,49 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
     // 开始任务
     while (1)
     {
-        // 从队列取任务
+        if(thread_flag==THREAD_STOP)
+        {
+            qDebug()<<"["<<QThread::currentThread()<<"]thread exit";
+            return;
+        }
+        if(thread_flag==THREAD_WAIT)
+        {
+            qDebug()<<"["<<QThread::currentThread()<<"]thread wait";
+
+            while(1)
+            {
+                if(thread_flag==THREAD_STOP)
+                {
+                    qDebug()<<"["<<QThread::currentThread()<<"]thread exit";
+                    return;
+                }
+                if(thread_flag!=THREAD_WAIT)
+                {
+                    qDebug()<<"["<<QThread::currentThread()<<"]thread continue";
+                    break;
+                }
+            }
+        }
+
         QString todo_url;
         bool isRepeat = false;
-
-        // URL去重
+        /***************** URL去重 *****************/
         do
         {
 #ifdef MYSQL
             //todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
-            todo_url = Pop_Todo(TABLE_TODO_YINHUA);
-            if (todo_url.isNull() || thread_flag==1)
+            todo_url = Pop_Todo(todo_table);                // 从队列取任务
+            if (todo_url.isNull())
             {
-                qDebug() << "work over";
-                //continue;   // 多线程
-                return; // 任务完成
+                qDebug()<<"任务完成,等待添加任务......请手动继续";
+                thread_flag = THREAD_WAIT;
+                continue;   // 多线程
+                //qDebug() << "work over";
+                //return; // 任务完成
             }
 
             //if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
-            if (IsExist(TABLE_VISITED_YINHUA, todo_url))    // ！=0 访问表中存在
+            if (IsExist(visited_table, todo_url))    // ！=0 访问表中存在
             {
                 qDebug()<<"continue";
                 continue;
@@ -91,7 +131,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 
 #ifdef MYSQL
         //DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
-        Push_Visited(TABLE_VISITED_YINHUA, todo_url);
+        Push_Visited(visited_table, todo_url);
         Mycrawl todo_crawl(todo_url);
         todo_crawl.get(m_manager, nWebType);
 #else
@@ -104,15 +144,26 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
             todo_crawl.get(m_manager, nWebType);
         }
 #endif
-        // 休息1S
+        // 休息10S
         //QThread::sleep(10);
     }
 
     //返回线程完成信号
     //emit Threadfinish();
+
 }
 
 void MyThread::on_thread_finished_btn_clicked()
 {
-    thread_flag = 1;
+    thread_flag = THREAD_STOP;
+}
+
+void MyThread::on_thread_wait_btn_clicked()
+{
+    thread_flag = THREAD_WAIT;
+}
+
+void MyThread::on_thread_continue_btn_clicked()
+{
+    thread_flag = THREAD_START;
 }
