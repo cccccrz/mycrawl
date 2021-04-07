@@ -86,8 +86,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
             g_urlmutex.unlock();
             if (todo_url.isNull())
             {
-                qDebug()<<"任务完成,等待添加任务......请手动继续";
-                thread_flag = THREAD_WAIT;
+                qDebug()<<"任务完成,等待添加任务......";
                 continue;   // 多线程
                 //qDebug() << "work over";
                 //return; // 任务完成

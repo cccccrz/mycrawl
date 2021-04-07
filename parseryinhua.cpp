@@ -32,8 +32,8 @@ ParserYinhua::ParserYinhua(QString html)
     m_matchURL = MATCHURL;
     m_infomsg = INFOMSG;
     m_todo_table = TABLE_TODO_YINHUA;
-    m_result_table = TABLE_RESULT_YINHUA;
     m_visited_table = TABLE_VISITED_YINHUA;
+    m_result_table = TABLE_RESULT_YINHUA;
 }
 
 ParserYinhua::~ParserYinhua()

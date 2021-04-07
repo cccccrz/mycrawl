@@ -26,8 +26,8 @@ ParserDianyintt::ParserDianyintt(QString html)
     m_matchURL = MATCHURL;
     m_infomsg = INFOMSG;
     m_todo_table = TABLE_TODO_DIANYINTT;
-    m_result_table = TABLE_VISITED_DIANYINTT;
-    m_visited_table = TABLE_RESULT_DIANYINTT;
+    m_visited_table = TABLE_VISITED_DIANYINTT;
+    m_result_table = TABLE_RESULT_DIANYINTT;
 }
 
 ParserDianyintt::~ParserDianyintt()
