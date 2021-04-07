@@ -2,6 +2,7 @@
 #include "common.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QThread>
 
 Mycrawl::Mycrawl(QString rootUrl):m_rootURL(rootUrl)
 {    
@@ -32,7 +33,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
     // 发送 get 请求
     m_reply = manager->get(m_request);
 
-    qDebug()<<"crawl "<<m_rootURL<<"......";
+    qDebug()<<"["<<QThread::currentThread()<<"] crawl "<<m_rootURL<<"......";
     //connect(m_reply,&QNetworkReply::finished,this,&Mycrawl::reply_Finished);
 
     // 事件循环，同步爬取
@@ -55,7 +56,7 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
         m_reply = nullptr;
         return;
     }
-    qDebug()<<"done!";
+    qDebug()<<"["<<QThread::currentThread()<<"] done!";
 
     //创建对应网站的解析器，解析
     m_parser = TTY_CreatParser(nWebType, replyData);

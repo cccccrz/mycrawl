@@ -27,6 +27,10 @@ protected:
     QString m_resURL;
     QString m_rootURL;
     QString m_matchURL;
+    QString m_infomsg;
+    QString m_todo_table;
+    QString m_result_table;
+    QString m_visited_table;
 
 private:
 

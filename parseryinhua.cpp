@@ -3,13 +3,13 @@
 #include "common.h"
 //#include "databaseop.h"
 #include <QDebug>
-#include <QTextCodec>
 
 /*  樱花动漫详情页  */
 /*  <a href="/show/273.html" title="妖精的尾巴"> */
 
 #define TAGNAME "a"
 #define ATTRNAME "href"
+#define INFOMSG "title"
 //#define ROOTURL "http://www.imomoe.ai"
 //#define MATCHURL "/view/"
 #define ROOTURL "http://www.yhdm.io"
@@ -30,6 +30,10 @@ ParserYinhua::ParserYinhua(QString html)
     m_attrName = ATTRNAME;
     m_rootURL = ROOTURL;
     m_matchURL = MATCHURL;
+    m_infomsg = INFOMSG;
+    m_todo_table = TABLE_TODO_YINHUA;
+    m_result_table = TABLE_RESULT_YINHUA;
+    m_visited_table = TABLE_VISITED_YINHUA;
 }
 
 ParserYinhua::~ParserYinhua()
@@ -107,9 +111,9 @@ void ParserYinhua::Parse()
                 {
                     if(m_it->attribute("title").first) // 匹配结果标题
                     {
-                        QString title = m_it->attribute("title").second.c_str();
+                        QString title = m_it->attribute(m_infomsg.toUtf8().data()).second.c_str();
 #ifdef MYSQL
-                        Push_Result(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
+                        Push_Result(m_result_table, m_rootURL + m_resURL, title);
                         //DatabaseOp::Result_Push(TABLE_RESULT_YINHUA, m_rootURL+m_resURL, title);
 #else
                         QString resurl = title + " " + m_rootURL + m_resURL;
@@ -134,9 +138,9 @@ void ParserYinhua::Parse()
                 /************** 加入任务 ***************/
 #ifdef MYSQL
                 // URL去重
-                if(IsExist(TABLE_VISITED_YINHUA, m_resURL)==0)
+                if(IsExist(m_visited_table, m_resURL)==0)
                 {
-                    Push_Todo(TABLE_TODO_YINHUA, m_resURL);
+                    Push_Todo(m_todo_table, m_resURL);
                 }
 //                if(!DatabaseOp::isExist(TABLE_VISITED_YINHUA,m_resURL))
 //                {

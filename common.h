@@ -46,6 +46,7 @@ enum THREAD_STATE{
     THREAD_START = 0,
     THREAD_WAIT = 1,
     THREAD_STOP = 2,
+    THREAD_CONTINUE = 3,
 };
 
 /************* 网站对象创建方法 *************/

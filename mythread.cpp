@@ -4,7 +4,9 @@
 #include "mycrawl.h"
 #include "common.h"
 
-
+#include <QMutex>
+QMutex g_urlmutex;
+QMutex g_crawlmutex;
 
 #ifndef MYSQL
 QMutex g_mutex;
@@ -62,21 +64,14 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         }
         if(thread_flag==THREAD_WAIT)
         {
-            qDebug()<<"["<<QThread::currentThread()<<"]thread wait";
-
-            while(1)
-            {
-                if(thread_flag==THREAD_STOP)
-                {
-                    qDebug()<<"["<<QThread::currentThread()<<"]thread exit";
-                    return;
-                }
-                if(thread_flag!=THREAD_WAIT)
-                {
-                    qDebug()<<"["<<QThread::currentThread()<<"]thread continue";
-                    break;
-                }
-            }
+            //qDebug()<<"["<<QThread::currentThread()<<"]thread wait";
+            QThread::sleep(1);
+            continue;
+        }
+        if(thread_flag == THREAD_CONTINUE)
+        {
+            qDebug()<<"All Thread Continue......";
+            thread_flag = THREAD_START;
         }
 
         QString todo_url;
@@ -86,7 +81,9 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
         {
 #ifdef MYSQL
             //todo_url = DatabaseOp::Todo_PoP(TABLE_TODO_YINHUA);
+            g_urlmutex.lock();
             todo_url = Pop_Todo(todo_table);                // 从队列取任务
+            g_urlmutex.unlock();
             if (todo_url.isNull())
             {
                 qDebug()<<"任务完成,等待添加任务......请手动继续";
@@ -99,7 +96,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
             //if (DatabaseOp::isExist(TABLE_VISITED_YINHUA, todo_url))
             if (IsExist(visited_table, todo_url))    // ！=0 访问表中存在
             {
-                qDebug()<<"continue";
+                qDebug()<<"Visited URL, continue";
                 continue;
             }
 #else
@@ -132,7 +129,9 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 #ifdef MYSQL
         //DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
         Push_Visited(visited_table, todo_url);
+        g_crawlmutex.lock();
         Mycrawl todo_crawl(todo_url);
+        g_crawlmutex.unlock();
         todo_crawl.get(m_manager, nWebType);
 #else
         {
@@ -160,10 +159,11 @@ void MyThread::on_thread_finished_btn_clicked()
 
 void MyThread::on_thread_wait_btn_clicked()
 {
+    qDebug()<<"All Thread Waiting......";
     thread_flag = THREAD_WAIT;
 }
 
 void MyThread::on_thread_continue_btn_clicked()
 {
-    thread_flag = THREAD_START;
+    thread_flag = THREAD_CONTINUE;
 }
