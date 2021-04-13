@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/test.qss</file>
+        <file>image/main.ico</file>
+    </qresource>
+</RCC>

@@ -20,10 +20,19 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //this->setWindowIcon(QIcon(":/other/image/main.ico"));
    // 隐藏进度条
     //ui->progressBar->hide();
     // 初始化
     m_manager = Common::getNetManager();
+
+    QString qss = "://qss/test.qss";
+    this->LoadStyleSheet(qss);
+
+    //widget 背景色属性
+    ui->tabWidget->setAttribute(Qt::WA_StyledBackground);
+    ui->tabWidget->setStyleSheet("QTabWidget#tabWidget{background-color:#6b6b6b;}");
 
 //    if (!DatabaseOp::openDatabase("localhost", "crawl", "root", "123456")) {
 //        qDebug() << "mysql open failed";
@@ -51,6 +60,22 @@ MainWindow::~MainWindow()
 
     delete m_manager;
     delete ui;
+}
+
+void MainWindow::LoadStyleSheet(const QString &styleSheetFile)
+{
+    QFile file(styleSheetFile);
+    file.open(QFile::ReadOnly);
+    if(file.isOpen())
+    {
+        QString styleSheet = this->styleSheet();
+        styleSheet += QLatin1String(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    }
+    else {
+        QMessageBox::information(this, "tip", "cannot find qss file");
+    }
 }
 
 /******************* 爬取动作 ***************************/

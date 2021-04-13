@@ -25,6 +25,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private:
+    void LoadStyleSheet(const QString &styleSheetFile);
+
 private slots:
     void on_btn_StartSearch_clicked();  //  开始搜索
 

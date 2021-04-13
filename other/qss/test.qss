@@ -1,0 +1,201 @@
+QPushButton{
+border-radius: 11;
+border: 1px solid #000000;
+min-height: 15px;
+min-width: 80px;
+font: 12pt "楷体";
+color: #ffffff;
+padding: 8px 12px 8px 12px;
+background: #585858;
+}
+
+QPushButton:hover{
+background: #7f7f7f;
+}
+
+QPushButton:pressed{
+background: #585858;
+}
+
+QSlider{
+min-height: 14px;
+min-width: 8px;
+padding: 8px 8px 8px 8px;
+background: #434242;
+}
+QLineEdit,QTextEdit,QPlainTextEdit,QSpinBox,QDoubleSpinBox,QComboBox,QDateEdit,QTimeEdit,QDateTimeEdit{
+border:1px solid #242424;
+border-radius:3px;
+padding:2px;
+background:#a7a7a7;
+selection-background-color:#484848;
+selection-color:#DCDCDC;
+}
+
+QLineEdit:focus,QTextEdit:focus,QPlainTextEdit:focus,QSpinBox:focus,QDoubleSpinBox:focus,QComboBox:focus,QDateEdit:focus,QTimeEdit:focus,QDateTimeEdit:focus,QLineEdit:hover,QTextEdit:hover,QPlainTextEdit:hover,QSpinBox:hover,QDoubleSpinBox:hover,QComboBox:hover,QDateEdit:hover,QTimeEdit:hover,QDateTimeEdit:hover{
+border:1px solid #242424;
+}
+
+QLabel{
+font: 20pt "微软雅黑";
+color: #D9FFF6;
+}
+
+QComboBox{
+border-radius: 11;
+border: 0px solid #000000;
+min-height: 15px;
+min-width: 80px;
+font: 12pt "黑体";
+color: #ffffff;
+padding: 8px 8px 8px 8px;
+background: #5b3939;
+}
+
+QComboBox:hover{
+background: #b09090;
+}
+
+QComboBox:pressed{
+background: #5b5353;
+}
+
+QComboBox:drop-down{
+border-radius: 11;
+border: 0px solid #000000;
+min-height: 1px;
+min-width: 8px;
+padding: 8px 8px 8px 8px;
+background: #5b3939;
+}
+
+QComboBox:drop-down:hover{
+background: #b09090;
+}
+
+QComboBox:drop-down:pressed{
+background: #5b5353;
+}
+
+QComboBox QAbstractItemView{
+border-radius: 30;
+border: 0px solid #000000;
+background: #ffffff;
+color: #5b3939;
+selection-color: #b09090;
+selection-background-color: #5b5353;
+min-height: 45px;
+min-width: 240px;
+padding: 8px 8px 8px 8px;
+}
+
+
+QTreeView,QListView,QTableView,QTabWidget::pane{
+border:1px solid #242424;
+selection-background-color:#ffcbc9;
+selection-color:#DCDCDC;
+alternate-background-color:#b0b0b0;
+gridline-color:#242424;
+}
+
+QTreeView::branch:closed:has-children{
+margin:4px;
+border-image:url(:/qss/psblack/branch_open.png);
+}
+
+QTreeView::branch:open:has-children{
+margin:4px;
+border-image:url(:/qss/psblack/branch_close.png);
+}
+
+QTreeView,QListView,QTableView,QSplitter::handle,QTreeView::branch{
+background:#FFCBC9;
+}
+
+QTableView::item:selected,QListView::item:selected,QTreeView::item:selected{
+color:#DCDCDC;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
+}
+
+QTableView::item:hover,QListView::item:hover,QTreeView::item:hover{
+color:#DCDCDC;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #646464,stop:1 #525252);
+}
+
+QTableView::item,QListView::item,QTreeView::item{
+padding:1px;
+margin:0px;
+}
+
+QHeaderView::section,QTableCornerButton:section{
+padding:3px;
+margin:0px;
+color:#DCDCDC;
+border:1px solid #242424;
+border-left-width:0px;
+border-right-width:1px;
+border-top-width:0px;
+border-bottom-width:1px;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #646464,stop:1 #525252);
+}
+
+QTabBar::tab{
+border:1px solid #242424;
+color:#DCDCDC;
+margin:0px;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #646464,stop:1 #525252);
+}
+
+QTabBar::tab:selected,QTabBar::tab:hover{
+border-style:solid;
+border-color:#00BB9E;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
+}
+
+QTabBar::tab:top,QTabBar::tab:bottom{
+padding:3px 8px 3px 8px;
+}
+
+QTabBar::tab:left,QTabBar::tab:right{
+padding:8px 3px 8px 3px;
+}
+
+QTabBar::tab:top:selected,QTabBar::tab:top:hover{
+border-width:2px 0px 0px 0px;
+}
+
+QTabBar::tab:right:selected,QTabBar::tab:right:hover{
+border-width:0px 0px 0px 2px;
+}
+
+QTabBar::tab:bottom:selected,QTabBar::tab:bottom:hover{
+border-width:0px 0px 2px 0px;
+}
+
+QTabBar::tab:left:selected,QTabBar::tab:left:hover{
+border-width:0px 2px 0px 0px;
+}
+
+QTabBar::tab:first:top:selected,QTabBar::tab:first:top:hover,QTabBar::tab:first:bottom:selected,QTabBar::tab:first:bottom:hover{
+border-left-width:1px;
+border-left-color:#242424;
+}
+
+QTabBar::tab:first:left:selected,QTabBar::tab:first:left:hover,QTabBar::tab:first:right:selected,QTabBar::tab:first:right:hover{
+border-top-width:1px;
+border-top-color:#242424;
+}
+
+QTabBar::tab:last:top:selected,QTabBar::tab:last:top:hover,QTabBar::tab:last:bottom:selected,QTabBar::tab:last:bottom:hover{
+border-right-width:1px;
+border-right-color:#242424;
+}
+
+QTabBar::tab:last:left:selected,QTabBar::tab:last:left:hover,QTabBar::tab:last:right:selected,QTabBar::tab:last:right:hover{
+border-bottom-width:1px;
+border-bottom-color:#242424;
+}
+
+
+
+
