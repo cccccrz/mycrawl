@@ -30,8 +30,8 @@ private:
 //    QString m_tagName;
 //    QString m_attrName;
 
-    QNetworkRequest m_request;  // 请求
-    QNetworkReply* m_reply;     // 响应
+    QNetworkRequest request;  // 请求
+    QNetworkReply* reply;     // 响应
 };
 
 #endif // MYCRAWL_H

@@ -127,7 +127,7 @@ void MyThread::slot_StartMyThread(QString rootURL,uint nWebType)
 
 #ifdef MYSQL
         //DatabaseOp::Visited_Push(TABLE_VISITED_YINHUA, todo_url);
-        Push_Visited(visited_table, todo_url);
+        //Push_Visited(visited_table, todo_url);// 加入已访问列表  改在爬取页面后加入
         g_crawlmutex.lock();
         Mycrawl todo_crawl(todo_url);
         g_crawlmutex.unlock();

@@ -7,13 +7,19 @@
 #include "parser.h"
 
 /************ 搜索引擎 ************/
-#define BAIDU "https://www.baidu.com/s?wd="
-#define BINGCN "https://cn.bing.com/search?q="
-#define BINGFR "&ensearch=1"
+//#define BAIDU "https://www.baidu.com/s?wd="
+//#define BINGCN "https://cn.bing.com/search?q="
+//#define BINGFR "&ensearch=1"
+const QString BAIDU = "https://www.baidu.com/s?wd=";
+const QString BINGCN = "https://cn.bing.com/search?q=";
+const QString BINGFR = "&ensearch=1";
 
 /************ 订阅网站 ************/
 #define DIANYINTT "https://yingtt.com"
 #define YINHUA "http://www.yhdm.io"
+
+//const QString DIANYINTT = "https://yingtt.com";
+//const QString YINHUA = "http://www.yhdm.io";
 
 /************ 使用MySQL *************/
 #define MYSQL
@@ -27,6 +33,13 @@
 #define TABLE_VISITED_DIANYINTT "visited_dianyintt"
 #define TABLE_RESULT_DIANYINTT "result_dianyintt"
 
+//const QString TABLE_TODO_YINHUA = "todo_yinhua";
+//const QString TABLE_VISITED_YINHUA = "visited_yinhua";
+//const QString TABLE_RESULT_YINHUA = "result_yinhua";
+
+//const QString TABLE_TODO_DIANYINTT = "todo_dianyintt";
+//const QString TABLE_VISITED_DIANYINTT = "visited_dianyintt";
+//const QString TABLE_RESULT_DIANYINTT = "result_dianyintt";
 /************* 网站接口声明 *************/
 #ifdef DIANYINTT
 extern Parser *CreateParser_DIANYINTT(QString html);
@@ -50,7 +63,7 @@ enum THREAD_STATE{
 };
 
 /************* 网站对象创建方法 *************/
-Parser *TTY_CreatParser(uint nWebType, QString html);
+Parser *TTY_CreatParser(WEB_TYPE nWebType, QString html);
 
 /************* 数据库并发操作 ***************/
 bool Push_Result(QString table, QString url, QString info);

@@ -10,7 +10,7 @@ DBCommon::Control control({ "QMYSQL", "TestDB", "localhost", "crawl", "root", "1
                           { 60 * 1000,        DBCommon::QueryMultiMode, 10});
 
 /* 网站对象创建方法 */
-Parser *TTY_CreatParser(uint nWebType, QString html)
+Parser *TTY_CreatParser(WEB_TYPE nWebType, QString html)
 {
     Parser *pParser = nullptr;
 
@@ -26,8 +26,6 @@ Parser *TTY_CreatParser(uint nWebType, QString html)
         pParser = CreateParser_YINHUA(html);
     } break;
 #endif
-    default:
-        break;
     }
     return pParser;
 }
@@ -86,7 +84,7 @@ bool Push_Todo(QString table, QString url)
         return false;
     }
     auto query(control.query());
-    QString sql = QString("insert into %1 values('%2')").arg(table).arg(url);
+    QString sql = QString("insert into %1(url) values('%2')").arg(table).arg(url);
     if(!query->exec(sql))
     {
        //qDebug() <<__FUNCTION__<< "Insert Error" << __LINE__;
@@ -104,8 +102,8 @@ QString Pop_Todo(QString table)
     }
 
     auto query(control.query());
-    QString url;
-    QString sql = QString("SELECT * FROM %1").arg(table);
+
+    QString sql = QString("SELECT * FROM %1 ORDER BY id").arg(table);
 
     if (!query->exec(sql))
     {
@@ -113,11 +111,12 @@ QString Pop_Todo(QString table)
         return QString();
     }
     query->next();
-    url = query->value(0).toString();
+    QString url = query->value(1).toString();
+    int id = query->value(0).toInt();
 
     query->clear();
 
-    sql = QString("DELETE FROM %1 WHERE url='%2'").arg(table).arg(url);
+    sql = QString("DELETE FROM %1 WHERE id='%2'").arg(table).arg(id);
     if (!query->exec(sql))
     {
         //qDebug() <<__FUNCTION__<< "Delete Error" << __LINE__;

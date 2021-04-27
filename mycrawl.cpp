@@ -23,28 +23,31 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
 //    cfg.setProtocol(QSsl::TlsV1SslV3);
 //    m_request.setSslConfiguration(cfg);
 
-    m_request.setUrl(QUrl(m_rootURL));
+//    QNetworkRequest request;  // 请求
+//    QNetworkReply* reply;     // 响应
+
+    request.setUrl(QUrl(m_rootURL));
 
     QVariant user_Agent_chrome = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
                                  AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36";
-    m_request.setHeader(QNetworkRequest::UserAgentHeader,user_Agent_chrome);
-    m_request.setRawHeader("Accept-Language", "zh-CN,zh");
+    request.setHeader(QNetworkRequest::UserAgentHeader,user_Agent_chrome);
+    request.setRawHeader("Accept-Language", "zh-CN,zh");
 
     // 发送 get 请求
-    m_reply = manager->get(m_request);
+    reply = manager->get(request);
 
     qDebug()<<"["<<QThread::currentThread()<<"] crawl "<<m_rootURL<<"......";
     //connect(m_reply,&QNetworkReply::finished,this,&Mycrawl::reply_Finished);
 
     // 事件循环，同步爬取
     QEventLoop loop;
-    connect(m_reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+    connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
     loop.exec(QEventLoop::ExcludeUserInputEvents);
 
-    QByteArray replyData = m_reply->readAll();
-    int statusCode = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    QVariant redirectAttr = m_reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-        if (m_reply->error()
+    QByteArray replyData = reply->readAll();
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    QVariant redirectAttr = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+        if (reply->error()
         || 300 == statusCode //状态码300 Multiple Choices，既不是错误也不算重定向，应该是qt bug
         || !redirectAttr.isNull())
     {
@@ -52,14 +55,27 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
 //        QMessageBox::critical(nullptr, "网络异常",
 //                              QString("发送get请求时出现错误：\n网址：%1\n错误信息：%2").arg(m_reply->request().url().toDisplayString(), errString));
         replyData.clear();
-        m_reply->deleteLater();
-        m_reply = nullptr;
+        reply->deleteLater();
+        reply = nullptr;
         return;
     }
-    qDebug()<<"["<<QThread::currentThread()<<"] done!";
+    qDebug()<<"["<<QThread::currentThread()<<"] crawl done!";
+    QString visited_table;
+    switch (nWebType)
+    {
+    case WEBTYPE_YINHUA:
+        visited_table = TABLE_VISITED_YINHUA;
+        break;
+    case WEBTYPE_DIANYINTT:
+        visited_table = TABLE_VISITED_DIANYINTT;
+        break;
+    default:
+        return;
+    }
+    Push_Visited(visited_table, m_rootURL);// 加入已访问列表
 
     //创建对应网站的解析器，解析
-    m_parser = TTY_CreatParser(nWebType, replyData);
+    m_parser = TTY_CreatParser((WEB_TYPE)nWebType, replyData);
     m_parser->Parse();
 
     //释放资源
@@ -68,8 +84,8 @@ void Mycrawl::get(QNetworkAccessManager* manager, uint nWebType)
         delete  m_parser;
         m_parser = nullptr;
     }
-    m_reply->deleteLater();
-    m_reply = nullptr;
+    reply->deleteLater();
+    reply = nullptr;
 }
 
 // 爬取&解析

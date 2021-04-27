@@ -211,7 +211,8 @@ void MainWindow::reply_Finished()
 /****************** 爬虫功能 *********************/
 void MainWindow::on_work_Btn_clicked()
 {
-    uint nWebType = 0;
+    //uint nWebType = 0;
+    WEB_TYPE nWebType;
     QString rootUrl;
     switch (ui->comboBox_Web->currentIndex())
     {
@@ -229,7 +230,7 @@ void MainWindow::on_work_Btn_clicked()
 
     // 创建线程工作
     Worker *pWorker = new Worker();
-    pWorker->start_thread(rootUrl, nWebType);
+    pWorker->start_thread(rootUrl, (uint)nWebType);
 }
 
 /***************** 结果展示 *********************/
